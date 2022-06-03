@@ -7,6 +7,7 @@ package it.polito.tdp.imdb;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.imdb.model.Actor;
 import it.polito.tdp.imdb.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,10 +36,10 @@ public class FXMLController {
     private Button btnSimulazione; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxGenere"
-    private ComboBox<?> boxGenere; // Value injected by FXMLLoader
+    private ComboBox<String> boxGenere; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxAttore"
-    private ComboBox<?> boxAttore; // Value injected by FXMLLoader
+    private ComboBox<Actor> boxAttore; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtGiorni"
     private TextField txtGiorni; // Value injected by FXMLLoader
@@ -48,16 +49,63 @@ public class FXMLController {
 
     @FXML
     void doAttoriSimili(ActionEvent event) {
+    	
+    	try {
+    		
+    		String string= this.model.getSimili(boxAttore.getValue());
+        	
+        	txtResult.clear();
+        	txtResult.appendText(string);
+    		
+    	}catch (NullPointerException e) {
+			txtResult.clear();
+			txtResult.appendText("Selezionare un attore!\nSe non si visualizza l'elenco, allora crare prima il grafo!\n");
+		}
+    	
+    	
+    	
+    	
 
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	
+    	try {
+    		String s= this.model.creaGrafo(boxGenere.getValue());
+        	
+        	txtResult.clear();
+        	txtResult.appendText(s);
+        	
+        	boxAttore.getItems().clear();
+        	boxAttore.getItems().addAll(this.model.getVertici());
+    		
+    	}catch (NullPointerException e) {
+			txtResult.clear();
+			txtResult.appendText("Selezionare un genere!\n");
+		}
+    	
     }
 
     @FXML
     void doSimulazione(ActionEvent event) {
+    	
+    	
+    	try {
+    	
+    		int n=Integer.parseInt(txtGiorni.getText());
+        	
+        	String string= this.model.Simula(n);
+        	
+        	txtResult.clear();
+        	txtResult.appendText(string);
+    		
+    	}catch (NumberFormatException e) {
+			txtResult.clear();
+			txtResult.appendText("Inserire un numero nel formato corretto!\n");
+		}
+    	
+    	
 
     }
 
@@ -75,5 +123,7 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	this.boxGenere.getItems().clear();
+    	this.boxGenere.getItems().addAll(this.model.getAllGeneri());
     }
 }
