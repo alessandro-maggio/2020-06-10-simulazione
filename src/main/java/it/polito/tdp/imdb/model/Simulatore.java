@@ -203,13 +203,5 @@ public class Simulatore {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }
